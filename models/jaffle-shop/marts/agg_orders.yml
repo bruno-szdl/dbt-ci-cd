@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: agg_orders
+    description: "This aggregated table summarizes orders by date, status, and payment method, providing the total amount for each combination."
+    columns:
+      - name: order_date
+        description: "The date when the orders were placed."
+
+      - name: status
+        description: "The status of the orders."
+
+      - name: total_amount
+        description: "The total amount for orders grouped by order_date, status, and payment_method."
+
+unit_tests:
+  - name: test_amount_sum
+    model: agg_orders
+    given:
+      - input: ref('fact_orders')
+        format: csv
+        rows: |
+          order_date,status,amount
+          '2024-01-01',completed,100
+          '2024-01-01',completed,100
+          '2024-01-02',cancelled,100
+          '2024-01-02',shipped,100
+    expect:
+      format: csv
+      rows: |
+          order_date,status,total_amount
+          '2024-01-01',completed,200
+          '2024-01-02',cancelled,100
+          '2024-01-02',shipped,100

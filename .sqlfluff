@@ -1,0 +1,61 @@
+[sqlfluff]
+dialect = trino
+templater = jinja
+sql_file_exists = .sql
+exclude_rules = ambiguous.column_count, structure.column_order, ambiguous.join, LT01
+max_line_length = 120
+
+[sqlfluff:templater:dbt]
+project_dir = ./
+
+[sqlfluff:layout:type:comma]
+line_position = leading
+
+[sqlfluff:rules:layout.select_targets]
+wildcard_policy = single
+
+[sqlfluff:rules:jinja.padding]
+single_space = true
+
+[sqlfluff:indentation]
+allow_implicit_indents = True
+indented_joins = False
+indented_using_on = True
+template_blocks_indent = True
+indented_on_contents = False
+indented_ctes = True
+indented_then = True
+
+[sqlfluff:templater]
+unwrap_wrapped_queries = True
+
+[sqlfluff:rules]
+allow_scalar = True
+single_table_references = consistent
+unquoted_identifiers_policy = all
+LT01 = disable
+
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.identifiers]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.functions]
+capitalisation_policy = lower
+extended_capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.literals]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.types]
+extended_capitalisation_policy = lower
+
+[sqlfluff:rules:aliasing.table]
+aliasing = explicit
+
+[sqlfluff:rules:aliasing.column]
+aliasing = explicit
+
+[sqlfluff:rules:aliasing.length]
+min_alias_length = 3

@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "This model combines customer data from the staging table with country information, providing a unified view of customers with their respective country names."
+    columns:
+      - name: id
+        description: "Unique identifier for each customer."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: first_name
+        description: "First name of the customer."
+        data_tests:
+          - not_null
+
+      - name: last_name
+        description: "Last name of the customer."
+        data_tests:
+          - not_null
+
+      - name: country_name
+        description: "The name of the country associated with the customer's country code."
+        data_tests:
+          - not_null
+
+      - name: last_updated_dt
+        description: "The date and time when the customer's information was last updated."
+        data_tests:
+          - not_null
+
+      - name: dbt_valid_from
+        description: "Timestamp indicating the validity period's start for the customer record."
+        data_tests:
+          - not_null
+
+      - name: dbt_valid_to
+        description: "Timestamp indicating the validity period's end for the customer record."
+
+
