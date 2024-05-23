@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: staging table for orders
+    columns:
+      - name: id
+        data_tests:
+          - unique
+          - not_null
+      - name: user_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: id
+      - name: order_date
+        data_tests:
+          - not_null
+      - name: status
+        data_tests:
+          - accepted_values:
+              values:
+                - return_pending
+                - returned
+                - completed
+                - placed
+                - shipped
+      - name: last_updated_dt
+        data_tests:
+          - not_null

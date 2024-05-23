@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: fact_orders
+    description: "This fact table combines data from orders and payments, linking each order with its payment details."
+    columns:
+      - name: id
+        description: "Unique identifier for each order."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: user_id
+        description: "Identifier for the user who placed the order."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: id
+
+      - name: order_date
+        description: "The date when the order was placed."
+        data_tests:
+          - not_null
+
+      - name: status
+        description: "Current status of the order."
+        data_tests:
+          - not_null
+
+      - name: payment_methods
+        description: "The methods of payment used for the order."
+        data_tests:
+          - not_null
+
+      - name: amount
+        description: "The total amount paid for the order."
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 100000

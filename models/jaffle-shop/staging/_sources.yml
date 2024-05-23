@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: raw
+    tables:
+      - name: raw_orders
+      - name: raw_customers
+      - name: raw_payments
+
+    freshness:
+      warn_after:
+        count: 1
+        period: day
+      error_after:
+        count: 7
+        period: day
+    loaded_at_field: "cast(last_updated_dt as timestamp)"
