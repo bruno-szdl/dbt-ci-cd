@@ -48,7 +48,7 @@ jobs:
     - name: Copy manifest.json from Google Cloud Storage
       run: |
         mkdir -p target_prod
-        gsutil cp gs://${{ env.GCLOUD_STORAGE_PATH_MANIFEST }}/manifest.json target_prod/manifest.json || echo "Manifest not found"
+        gsutil cp gs://${{ env.GCLOUD_STORAGE_PATH_MANIFEST }}/manifest.json target_prod/ || echo "Manifest not found"
 
     - name: Run dbt debug for PRs
       if: github.event_name == 'pull_request'
