@@ -1,10 +1,6 @@
-name: DBT CI
+name: CD (on merge to main)
 
 on:
-  pull_request:
-    branches:
-      - main
-
   push:
     branches:
       - main
@@ -14,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-
       GCLOUD_SERVICE_KEY: ${{ secrets.GCLOUD_SERVICE_KEY }}
       GCLOUD_STORAGE_PATH_MANIFEST: ${{ secrets.GCLOUD_STORAGE_PATH_MANIFEST }}
       DBT_ENV_SECRET_TYPE: ${{ secrets.DBT_ENV_SECRET_TYPE }} 
@@ -54,28 +49,13 @@ jobs:
       run: |
         gsutil cp gs://${{ env.GCLOUD_STORAGE_PATH_MANIFEST }}/manifest.json ./ || echo "Manifest not found"
 
-    - name: Run dbt debug for PRs
-      if: github.event_name == 'pull_request'
-      run: dbt debug --target dev
-
-    - name: Run dbt debug for main branch
-      if: github.ref == 'refs/heads/main'
+    - name: Run dbt debug
       run: dbt debug --target prod
 
     - name: Run dbt deps
-      run: dbt deps
+      run: dbt deps --target prod
 
-    - name: Run dbt build for PRs
-      if: github.event_name == 'pull_request'
-      run: |
-        if [ -f "./manifest.json" ]; then
-          dbt build -s 'state:modified+' --state ./ --target dev
-        else
-          dbt build --target dev
-        fi
-
-    - name: Run dbt build for main branch
-      if: github.ref == 'refs/heads/main'
+    - name: Run dbt build
       run: |
         if [ -f "./manifest.json" ]; then
           dbt build -s 'state:modified+' --state ./ --target prod
@@ -86,4 +66,3 @@ jobs:
     - name: Copy new manifest.json to Google Cloud Storage
       run: |
         gsutil cp ./target/manifest.json gs://${{ env.GCLOUD_STORAGE_PATH_MANIFEST }}/
-      if: github.event_name == 'push'
