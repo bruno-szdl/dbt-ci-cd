@@ -62,6 +62,7 @@ jobs:
           dbt build -s 'state:modified+' --defer target_prod
         else
           dbt build
+        fi
 
     - name: Copy new manifest.json to Google Cloud Storage
       run: |
