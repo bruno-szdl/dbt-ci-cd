@@ -30,10 +30,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: '3.12'
 
@@ -44,17 +44,6 @@ jobs:
       uses: google-github-actions/auth@v0.4.3
       with:
         credentials_json: ${{ secrets.GCLOUD_SERVICE_KEY }}
-
-    - name: Install gcloud SDK
-      run: |
-        sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates gnupg
-        echo "deb https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-        curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-        sudo apt-get update && sudo apt-get install -y google-cloud-sdk
-
-    - name: Configure gcloud CLI
-      run: |
-        gcloud config set project ${{ secrets.GCLOUD_PROJECT }}
 
     - name: Copy manifest.json from Google Cloud Storage
       run: |
@@ -92,5 +81,5 @@ jobs:
 
     - name: Copy new manifest.json to Google Cloud Storage
       run: |
-        gsutil cp target/manifest.json gs://${{ env.GCLOUD_STORAGE_PATH_MANIFEST }}/manifest.json
+        gsutil cp target/manifest.json gs://${{ env.GCLOUD_STORAGE_PATH_MANIFEST }}/
       if: github.event_name == 'push'
