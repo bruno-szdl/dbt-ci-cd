@@ -69,7 +69,7 @@ jobs:
       if: github.event_name == 'pull_request'
       run: |
         if [ -f "./manifest.json" ]; then
-          dbt build -s 'state:modified+' --state './' --target dev
+          dbt build -s 'state:modified+' --state ./ --target dev
         else
           dbt build --target dev
         fi
@@ -78,7 +78,7 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: |
         if [ -f "./manifest.json" ]; then
-          dbt build -s 'state:modified+' --state './' --target prod
+          dbt build -s 'state:modified+' --state ./ --target prod
         else
           dbt build --target prod
         fi
