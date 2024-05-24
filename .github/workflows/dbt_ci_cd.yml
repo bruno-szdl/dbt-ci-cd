@@ -50,6 +50,10 @@ jobs:
       with:
         project_id: ${{ secrets.DBT_ENV_SECRET_PROJECT_ID }}
 
+    - name: test copy
+      run: |
+        gsutil cp ./dbt_project.yml gs://${{ env.GCLOUD_STORAGE_PATH_MANIFEST }}/
+
     - name: Copy manifest.json from Google Cloud Storage
       run: |
         gsutil cp gs://${{ env.GCLOUD_STORAGE_PATH_MANIFEST }}/manifest.json ./ || echo "Manifest not found"
