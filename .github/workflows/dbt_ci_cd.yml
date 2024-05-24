@@ -56,15 +56,25 @@ jobs:
     - name: Run dbt deps
       run: dbt deps
 
-    - name: Run dbt build
+    - name: Run dbt build for PRs
+      if: github.event_name == 'pull_request'
       run: |
         if [ -f "target_prod/manifest.json" ]; then
-          dbt build -s 'state:modified+' --defer target_prod
+          dbt build -s 'state:modified+' --defer target_prod --target dev
         else
-          dbt build
+          dbt build --target dev
+        fi
+
+    - name: Run dbt build for main branch
+      if: github.ref == 'refs/heads/main'
+      run: |
+        if [ -f "target_prod/manifest.json" ]; then
+          dbt build -s 'state:modified+' --defer target_prod --target prod
+        else
+          dbt build --target prod
         fi
 
     - name: Copy new manifest.json to Google Cloud Storage
       run: |
-        gsutil cp target/manifest.json gs://${{ env.GCLOUD_BUCKET }}/${{ env.GCLOUD_TARGET_PATH }}/manifest.json
+        gsutil cp target/manifest.json gs://${{ env.GCLOUD_STORAGE_PATH_MANIFEST }}/manifest.json
       if: github.event_name == 'push'
