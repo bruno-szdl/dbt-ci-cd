@@ -1,0 +1,70 @@
+name: DBT CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+
+      GCLOUD_SERVICE_KEY: ${{ secrets.GCLOUD_SERVICE_KEY }}
+      GCLOUD_STORAGE_PATH_MANIFEST: ${{ secrets.GCLOUD_STORAGE_PATH_MANIFEST }}
+      DBT_ENV_SECRET_TYPE: ${{ secrets.DBT_ENV_SECRET_TYPE }} 
+      DBT_ENV_SECRET_PROJECT_ID: ${{ secrets.DBT_ENV_SECRET_PROJECT_ID }}
+      DBT_ENV_SECRET_PRIVATE_KEY_ID: ${{ secrets.DBT_ENV_SECRET_PRIVATE_KEY_ID }} 
+      DBT_ENV_SECRET_PRIVATE_KEY: ${{ secrets.DBT_ENV_SECRET_PRIVATE_KEY }}  
+      DBT_ENV_SECRET_CLIENT_EMAIL: ${{ secrets.DBT_ENV_SECRET_CLIENT_EMAIL }}
+      DBT_ENV_SECRET_CLIENT_ID: ${{ secrets.DBT_ENV_SECRET_CLIENT_ID }} 
+      DBT_ENV_SECRET_AUTH_URI: ${{ secrets.DBT_ENV_SECRET_AUTH_URI }}
+      DBT_ENV_SECRET_TOKEN_URI: ${{ secrets.DBT_ENV_SECRET_TOKEN_URI }}
+      DBT_ENV_SECRET_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.DBT_ENV_SECRET_AUTH_PROVIDER_X509_CERT_URL }} 
+      DBT_ENV_SECRET_CLIENT_X509_CERT_URL: ${{ secrets.DBT_ENV_SECRET_CLIENT_X509_CERT_URL }} 
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: pip install -r dbt-requirements.txt
+
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v0.4.3
+      with:
+        credentials_json: ${{ secrets.GCLOUD_SERVICE_KEY }}
+
+    - name: Copy manifest.json from Google Cloud Storage
+      run: |
+        mkdir -p target_prod
+        gsutil cp gs://${{ env.GCLOUD_STORAGE_PATH_MANIFEST }}/manifest.json target_prod/manifest.json || echo "Manifest not found"
+
+    - name: Run dbt debug
+      run: dbt debug
+
+    - name: Run dbt deps
+      run: dbt deps
+
+    - name: Run dbt build
+      run: |
+        if [ -f "target_prod/manifest.json" ]; then
+          dbt build -s 'state:modified+' --defer target_prod
+        else
+          dbt build
+        fi
+
+    - name: Copy new manifest.json to Google Cloud Storage
+      run: |
+        gsutil cp target/manifest.json gs://${{ env.GCLOUD_BUCKET }}/${{ env.GCLOUD_TARGET_PATH }}/manifest.json
+      if: github.event_name == 'push'
