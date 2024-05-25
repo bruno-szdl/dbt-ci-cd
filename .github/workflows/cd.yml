@@ -1,4 +1,4 @@
-name: CD (on merge to main)
+name: CD_action
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  CD_job:
     runs-on: ubuntu-latest
 
     env:
