@@ -1,4 +1,4 @@
-name: CI (on Pull Request)
+name: CI_action
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  CI_job:
     runs-on: ubuntu-latest
 
     env:
