@@ -55,7 +55,8 @@ jobs:
       run: echo "PR_NUMBER=$((RANDOM % 1000))" >> $GITHUB_ENV
 
     - name: Run dbt debug
-      run: dbt debug --target pr --vars "pr_number: ${{ env.PR_NUMBER }}"
+      run: |
+        dbt debug --target pr --vars "pr_number: $PR_NUMBER"
 
     - name: Run dbt deps
       run: dbt deps --target pr --vars "pr_number: ${{ env.PR_NUMBER }}"
