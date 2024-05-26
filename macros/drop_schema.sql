@@ -1,7 +1,7 @@
 {% macro drop_schema() %}
 
     {% set query %}
-        drop schema "{{ target.schema }}"
+        drop schema {{ target.schema }}
     {% endset %}
 
     {% if target.name == 'pr' %}
