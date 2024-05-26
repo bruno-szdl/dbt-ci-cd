@@ -43,3 +43,4 @@ seeds:
   dbt_project_evaluator:
     +enabled: "{{ env_var('ENABLE_DBT_PROJECT_EVALUATOR', 'false') | lower == 'true' | as_bool }}"
 
+on-run-end: "{% if target.name == 'pr' %} drop schema {{ target.schema }} {% endif %}"

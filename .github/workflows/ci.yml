@@ -51,15 +51,15 @@ jobs:
         gsutil cp gs://${{ env.GCLOUD_STORAGE_PATH_MANIFEST }}/manifest.json ./ || echo "Manifest not found"
 
     - name: Run dbt debug
-      run: dbt debug --target dev
+      run: dbt debug --target pr
 
     - name: Run dbt deps
-      run: dbt deps --target dev
+      run: dbt deps --target pr
 
     - name: Run dbt build
       run: |
         if [ -f "./manifest.json" ]; then
-          dbt build -s 'state:modified+' --state ./ --target dev
+          dbt build -s 'state:modified+' --defer --state ./ --target pr
         else
-          dbt build --target dev
+          dbt build --target pr
         fi
