@@ -45,7 +45,7 @@ bigquery_sandbox:
       type: bigquery
       method: service-account-json
       project: "{{ env_var('DBT_ENV_SECRET_PROJECT_ID') }}"
-      dataset: "pr_{{ invocation_id }}"
+      dataset: "pr_{{ var('pr_number') }}"
       threads: 4 # Must be a value of 1 or greater
 
       # These fields come from the service account json keyfile
