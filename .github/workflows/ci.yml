@@ -59,12 +59,13 @@ jobs:
         dbt debug --target pr --vars "pr_number: $PR_NUMBER"
 
     - name: Run dbt deps
-      run: dbt deps --target pr --vars "pr_number: ${{ env.PR_NUMBER }}"
+      run: |
+        dbt deps --target pr --vars "pr_number: $PR_NUMBER"
 
     - name: Run dbt build
       run: |
         if [ -f "./manifest.json" ]; then
-          dbt build -s 'state:modified+' --defer --state ./ --target pr --vars "pr_number: ${{ env.PR_NUMBER }}"
+          dbt build -s 'state:modified+' --defer --state ./ --target pr --vars "pr_number: $PR_NUMBER"
         else
-          dbt build --target pr --vars "pr_number: ${{ env.PR_NUMBER }}"
+          dbt build --target pr --vars "pr_number: $PR_NUMBER"
         fi
