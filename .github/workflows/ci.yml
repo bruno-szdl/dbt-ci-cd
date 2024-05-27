@@ -69,8 +69,3 @@ jobs:
         else
           dbt build --target pr --vars "pr_number: $PR_NUMBER"
         fi
-
-    - name: Drop PR schema
-      run: |
-        dbt run-operation drop_pr_schema --args  "pr_number: $PR_NUMBER" --target prod
-
