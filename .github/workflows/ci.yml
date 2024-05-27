@@ -49,17 +49,23 @@ jobs:
     - name: Copy manifest.json from Google Cloud Storage
       run: |
         gsutil cp gs://${{ env.GCLOUD_STORAGE_PATH_MANIFEST }}/manifest.json ./ || echo "Manifest not found"
+    
+    - name: Generate random number for the PR schema
+      id: random_number
+      run: echo "PR_NUMBER=$((RANDOM % 1000))" >> $GITHUB_ENV
 
     - name: Run dbt debug
-      run: dbt debug --target dev
+      run: |
+        dbt debug --target pr --vars "pr_number: $PR_NUMBER"
 
     - name: Run dbt deps
-      run: dbt deps --target dev
+      run: |
+        dbt deps --target pr --vars "pr_number: $PR_NUMBER"
 
     - name: Run dbt build
       run: |
         if [ -f "./manifest.json" ]; then
-          dbt build -s 'state:modified+' --state ./ --target dev
+          dbt build -s 'state:modified+' --defer --state ./ --target pr --vars "pr_number: $PR_NUMBER"
         else
-          dbt build --target dev
+          dbt build --target pr --vars "pr_number: $PR_NUMBER"
         fi
