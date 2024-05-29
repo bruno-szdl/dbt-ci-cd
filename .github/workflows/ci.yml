@@ -50,9 +50,9 @@ jobs:
       run: |
         gsutil cp gs://${{ env.GCLOUD_STORAGE_PATH_MANIFEST }}/manifest.json ./ || echo "Manifest not found"
     
-    - name: Generate random number for the PR schema
-      id: random_number
-      run: echo "PR_NUMBER=$((RANDOM % 1000))" >> $GITHUB_ENV
+    - name: Get PR Number
+      id: pr_number
+      run: echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
 
     - name: Run dbt debug
       run: |
