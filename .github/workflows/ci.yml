@@ -50,22 +50,22 @@ jobs:
       run: |
         gsutil cp gs://${{ env.GCLOUD_STORAGE_PATH_MANIFEST }}/manifest.json ./ || echo "Manifest not found"
     
-    - name: Get PR Number
-      id: pr_number
-      run: echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+    - name: Get Schema ID
+      id: schema_id
+      run: echo "SCHEMA_ID=${{ github.event.pull_request.number }}__${{ github.sha }}" >> $GITHUB_ENV
 
     - name: Run dbt debug
       run: |
-        dbt debug --target pr --vars "pr_number: $PR_NUMBER"
+        dbt debug --target pr --vars "schema_id: $SCHEMA_ID"
 
     - name: Run dbt deps
       run: |
-        dbt deps --target pr --vars "pr_number: $PR_NUMBER"
+        dbt deps --target pr --vars "schema_id: $SCHEMA_ID"
 
     - name: Run dbt build
       run: |
         if [ -f "./manifest.json" ]; then
-          dbt build -s 'state:modified+' --defer --state ./ --target pr --vars "pr_number: $PR_NUMBER"
+          dbt build -s 'state:modified+' --defer --state ./ --target pr --vars "schema_id: $SCHEMA_ID"
         else
-          dbt build --target pr --vars "pr_number: $PR_NUMBER"
+          dbt build --target pr --vars "schema_id: $SCHEMA_ID"
         fi
