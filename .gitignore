@@ -4,3 +4,4 @@ logs/
 .user.yml
 package-lock.yml
 venv/
+*.DS_Store
