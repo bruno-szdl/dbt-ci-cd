@@ -17,6 +17,7 @@ with
                 order by dbt_valid_to desc
             ) as row_num
             --, null as dummy_column_to_test_cicd
+            , null as dummy_column_to_test_cicd_2
         from {{ ref('snapshot_customers') }}
     )
 
