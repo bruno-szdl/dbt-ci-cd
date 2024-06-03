@@ -32,7 +32,7 @@ The `CI.yml` workflow triggers on every pull request to the `main` branch to ens
 
 ### Continuous Deployment (CD) Workflow
 
-The CD workflow executes when changes are merged into the main branch. It builds modified dbt resources and downstream dependencies in the production schema, ensuring that production data remains up-to-date:
+The `CD.yml` workflow executes when changes are merged into the main branch. It builds modified dbt resources and downstream dependencies in the production schema, ensuring that production data remains up-to-date:
 
 1. **Environment and Authentication Setup**
       - As in the CI workflow, prepare environment variables and authenticate using the Google Cloud SDK.
