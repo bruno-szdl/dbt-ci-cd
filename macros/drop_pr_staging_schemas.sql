@@ -5,7 +5,7 @@
             select schema_name
             from information_schema.schemata
             where
-            schema_name like 'pr_'||{{ PR_number }}||'%'
+            schema_name like 'pr_'||{{ PR_number }}||'__%'
         )
 
         select 
