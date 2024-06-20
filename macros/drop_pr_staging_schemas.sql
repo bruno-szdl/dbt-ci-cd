@@ -1,11 +1,11 @@
-{%- macro drop_pr_staging_schemas(SCHEMA_ID) %}
+{%- macro drop_pr_staging_schemas(PR_number) %}
 
     {% set pr_cleanup_query %}
         with pr_staging_schemas as (
             select schema_name
             from information_schema.schemata
             where
-            schema_name like 'pr_'||{{ SCHEMA_ID }}||'%'
+            schema_name like 'pr_'||{{ PR_number }}||'%'
         )
 
         select 
