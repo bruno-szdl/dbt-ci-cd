@@ -35,7 +35,6 @@ with
             , stg_orders.status
             , payment_methods_agg.payment_methods
             , payment_methods_agg.amount
-            , null as dummy
         from stg_orders
         left join payment_methods_agg
             on stg_orders.id = payment_methods_agg.order_id
