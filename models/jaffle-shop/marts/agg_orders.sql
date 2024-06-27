@@ -20,3 +20,4 @@ with
 
 select *
 from aggregated
+where true
