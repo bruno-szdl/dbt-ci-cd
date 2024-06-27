@@ -53,4 +53,4 @@ jobs:
       run: dbt deps
 
     - name: drop PR schemas
-      run: dbt run-operation drop_pr_staging_schemas --args "{'PR_number'":" '${PR_NUM}' }" --profiles-dir ./
+      run: dbt run-operation drop_pr_staging_schemas --args "{'project_id'":" '${DBT_ENV_SECRET_PROJECT_ID}', 'PR_number'":" '${PR_NUM}' }" --profiles-dir ./
