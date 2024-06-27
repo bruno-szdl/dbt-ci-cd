@@ -9,7 +9,7 @@
         )
 
         select 
-            'drop schema '||schema_name||';' as drop_command 
+            'drop schema if exists '||schema_name||';' as drop_command 
         from pr_staging_schemas
     {% endset %}
 
