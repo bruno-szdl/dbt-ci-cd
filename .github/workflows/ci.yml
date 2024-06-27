@@ -52,7 +52,7 @@ jobs:
     
     - name: Get Schema ID
       id: schema_id
-      run: echo "SCHEMA_ID=${{ github.event.pull_request.number }}__${{ github.sha }}" >> $GITHUB_ENV
+      run: echo "SCHEMA_ID=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
 
     - name: Run dbt debug
       run: |
