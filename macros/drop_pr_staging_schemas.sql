@@ -3,7 +3,7 @@
     {% set pr_cleanup_query %}
         with pr_staging_schemas as (
             select schema_name
-            from `{{ project_id }}`.`region-us`.information_schema.schemata
+            from {{ project_id }}.region-us.information_schema.schemata
             where
             schema_name like 'pr_'||{{ PR_number }}||'__%'
         )
