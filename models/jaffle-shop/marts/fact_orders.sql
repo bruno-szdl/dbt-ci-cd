@@ -1,3 +1,9 @@
+-- Adding incremental materialization to test out CI
+{{ config(
+    materialized='incremental'
+    , unique_key='id'
+) }}
+
 with
     stg_orders as (
         select
@@ -16,6 +22,8 @@ with
             , payment_method
             , amount
         from {{ ref('stg_payments') }}
+        {% if is_incremental %}
+        {% endif %}
     )
     
     , payment_methods_agg as (
