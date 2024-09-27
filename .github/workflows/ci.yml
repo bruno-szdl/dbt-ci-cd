@@ -65,6 +65,7 @@ jobs:
     - name: Run dbt build
       run: |
         if [ -f "./manifest.json" ]; then
+          dbt clone --select state:modified+,config.materialized:incremental,state:old --defer --state ./ --target pr --vars "schema_id: $SCHEMA_ID"
           dbt build -s 'state:modified+' --defer --state ./ --target pr --vars "schema_id: $SCHEMA_ID"
         else
           dbt build --target pr --vars "schema_id: $SCHEMA_ID"
