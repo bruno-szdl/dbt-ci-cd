@@ -41,13 +41,14 @@ jobs:
         id: schema_id
         run: echo "SCHEMA_ID=${{ github.event.pull_request.number }}__${{ github.sha }}" >> $GITHUB_ENV
 
-      # ---- Restore manifest from MAIN for slim CI ----
-      - name: Restore production manifest cache (from main)
-        id: restore-manifest
-        uses: actions/cache/restore@v4
+      # ---- Download manifest from MAIN for slim CI ----
+      - name: Download production manifest artifact (from main)
+        id: download-manifest
+        uses: actions/download-artifact@v5
         with:
+          name: ${{ env.PROD_MANIFEST_CACHE_KEY }}
           path: ./state
-          key: ${{ env.PROD_MANIFEST_CACHE_KEY }}
+          github-token: ${{ secrets.DOWNLOAD_ARTIFACT_TOKEN }}
 
       - name: Use state manifest if present
         run: |

@@ -36,11 +36,12 @@ jobs:
 
       # ---- State handling (manifest.json) via artifacts ----
       - name: Download previous manifest (if any)
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         continue-on-error: true
         with:
           name: ${{ env.MANIFEST_ARTIFACT_NAME }}
           path: ./state
+          github-token: ${{ secrets.DOWNLOAD_ARTIFACT_TOKEN }}
 
       - name: Use state manifest if present
         run: |
@@ -73,3 +74,4 @@ jobs:
           path: ./target/manifest.json
           if-no-files-found: error
           retention-days: 90
+          overwrite: true
